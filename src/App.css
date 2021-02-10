@@ -12,7 +12,7 @@ input[type='text']:focus {
   outline-color: #1d3557;
 }
 
-button {
+input.button{
   border: none;
   background-color: #1d3557;
   color: #a8dadc;

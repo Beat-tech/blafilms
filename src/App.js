@@ -6,34 +6,54 @@ import { ReactComponent as ChevronRight } from './chevron-right.svg'
 
 function App() {
   const [searchResult, setSearchResult] = useState()
+  const [titleSearch, setTitleSearch] = useState ('king')
+  const [pageChange, setPageChange] = useState (1)
 
-  useEffect(() => {
+
+ useEffect(() => {
     const search = async () => {
       const response = await fetch(
-        'http://www.omdbapi.com/?apikey=a461e386&s=king',
+        `http://www.omdbapi.com/?apikey=a461e386&s=${titleSearch}&page=${pageChange}`,
       )
 
       const data = await response.json()
+      setSearchResult (data)
 
-      if (!searchResult) {
-        setSearchResult(data)
-      }
+     
     }
 
     search()
-  })
+    
+  },[titleSearch, pageChange])
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (e.target.title.value !==''){
+    setTitleSearch(e.target.title.value)}
+  
+  };
+
+  const handleClickPrevious = () => {
+    if (pageChange>1) {
+    setPageChange(pageChange-1)}
+  }
+
+  const handleClickNext = (e) => {
+    setPageChange (pageChange+1)
+  }
   return (
     <div className="App">
-      <div className="search">
-        <input type="text" placeholder="Search..." />
-        <button>Search</button>
-      </div>
+      
+        <form  className="search" onSubmit= {handleSubmit}>
+        <input name="title" type="text" placeholder="Search..." />
+        <input className="button" value="Search" type="submit"></input>
+        </form>
+     
       {!searchResult ? (
         <p>No results yet</p>
       ) : (
         <div className="search-results">
-          <div className="chevron">
+          <div className="chevron" onClick= {handleClickPrevious}>
             <ChevronLeft />
           </div>
           <div className="search-results-list">
@@ -50,7 +70,7 @@ function App() {
               </div>
             ))}
           </div>
-          <div className="chevron">
+          <div className="chevron" onClick={handleClickNext}>
             <ChevronRight />
           </div>
         </div>
